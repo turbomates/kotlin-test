@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues>
+    <ID>ImplicitUnitReturnType:Response.kt$suspend fun HttpResponse.assertIsOk()</ID>
+    <ID>StringLiteralDuplication:Request.kt$"Content-type"</ID>
+    <ID>StringLiteralDuplication:Request.kt$"application/json"</ID>
+  </ManuallySuppressedIssues>
+  <CurrentIssues>
+
+  </CurrentIssues>
+</SmellBaseline>

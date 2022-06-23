@@ -1,4 +1,5 @@
 rootProject.name = "test-support"
+include("src")
 
 enableFeaturePreview("VERSION_CATALOGS")
 dependencyResolutionManagement {

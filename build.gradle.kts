@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    `java-library`
     kotlin("jvm").version(deps.versions.kotlin.asProvider().get())
     alias(deps.plugins.detekt)
     alias(deps.plugins.nexus.release)

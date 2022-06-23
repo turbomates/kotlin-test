@@ -2,7 +2,6 @@ package com.turbomates.testsupport
 
 import com.turbomates.testsupport.response.assertIsOk
 import integrationTest
-import io.ktor.http.ContentType.Application.Json
 import org.junit.jupiter.api.Test
 
 class RequestTest {

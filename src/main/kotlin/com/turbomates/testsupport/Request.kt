@@ -11,12 +11,6 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.client.request.post as clientPost
 
-private fun ApplicationTestBuilder.client() = createClient {
-    install(ContentNegotiation) {
-        json()
-    }
-}
-
 suspend fun ApplicationTestBuilder.get(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
     client.get(uri) { setup() }
 
@@ -41,4 +35,10 @@ suspend fun (HttpRequestBuilder.() -> Unit).deleteWithBody(uri: String, setup: H
 
 val jsonRequest: HttpRequestBuilder.() -> Unit = {
     contentType(Json)
+}
+
+private fun ApplicationTestBuilder.client() = createClient {
+    install(ContentNegotiation) {
+        json()
+    }
 }

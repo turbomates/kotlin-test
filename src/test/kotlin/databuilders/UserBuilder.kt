@@ -34,7 +34,7 @@ object UserMother {
 }
 
 class UserBuilder :
-    Builder<User>,
+    Builder<User>(),
     RequestSerializable<UserBuilder, JsonElement>,
     ResponseSerializable<UserBuilder, JsonElement>,
     DbAssertive<User> {

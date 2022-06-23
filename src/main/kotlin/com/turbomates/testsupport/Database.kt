@@ -15,13 +15,12 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-infix fun <E, B : Builder<E>> Database.has(builder: B): InsertResult<E, B> =
+infix fun <E, B : Builder<E>> Database.has(builder: B): B =
     transaction(this) {
         val entity = builder.build()
-        InsertResult(builder, entity)
+        builder.entity = entity
+        builder
     }
-
-data class InsertResult<E, B: Builder<E>>(val builder: B, val entity: E)
 
 internal fun IdTable<*>.assertCount(count: Int, where: SqlExpressionBuilder.() -> Op<Boolean> = { Op.TRUE }) {
     val countInDatabase = this.select { where() }.map { it[this.id] }.count()

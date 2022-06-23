@@ -1,9 +1,11 @@
 package com.turbomates.testsupport
 
 import org.jetbrains.exposed.dao.Entity
+import kotlin.properties.Delegates
 
-interface Builder<E> {
-    fun build(): E
+abstract class Builder<E : Any> {
+    var entity by Delegates.notNull<E>()
+    abstract fun build(): E
 }
 
 interface RequestSerializable<B : Builder<*>, out T> {

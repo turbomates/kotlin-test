@@ -16,9 +16,9 @@ class DatabaseTest {
             SchemaUtils.create(UserTable)
             val user = testDatabase has UserMother.hasUser()
             UserTable.assertCount(1)
-            UserTable.assertCount(1) { UserTable.name eq user.builder.name }
+            UserTable.assertCount(1) { UserTable.name eq user.name }
             UserTable.assertCount(0) { UserTable.name eq "wrong name" }
-            UserTable.hasValue(user.builder.name, UserTable.name)
+            UserTable.hasValue(user.name, UserTable.name)
             UserTable.doesNotHaveValue("wrong name", UserTable.name)
         }
     }
@@ -37,7 +37,7 @@ class DatabaseTest {
         shouldThrow<AssertionError> {
             SchemaUtils.create(UserTable)
             val user = testDatabase has UserMother.hasUser()
-            UserTable.doesNotHaveValue(user.builder.name, UserTable.name)
+            UserTable.doesNotHaveValue(user.name, UserTable.name)
         }
     }
 

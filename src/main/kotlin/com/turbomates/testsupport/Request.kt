@@ -13,10 +13,9 @@ suspend fun ApplicationTestBuilder.get(uri: String, setup: HttpRequestBuilder.()
     client.get(uri) { setup() }
 
 context(ApplicationTestBuilder)
-suspend fun ContentType.post(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
-    val contentType = toString()
+suspend fun (HttpRequestBuilder.() -> Unit).post(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
     return client.post(uri) {
-        header("Content-type", contentType)
+        this@post.invoke(this)
         setup()
     }
 }
@@ -25,7 +24,7 @@ suspend fun ApplicationTestBuilder.delete(uri: String, setup: HttpRequestBuilder
     client.delete(uri) { setup() }
 
 context(ApplicationTestBuilder)
-suspend fun ContentType.deleteWithBody(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
+        suspend fun ContentType.deleteWithBody(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
     val contentType = toString()
     return client.delete(uri) {
         header("Content-type", contentType)

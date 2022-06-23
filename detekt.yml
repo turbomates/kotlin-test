@@ -158,8 +158,7 @@ potential-bugs:
   ExitOutsideMain:
     active: true
   ImplicitUnitReturnType:
-    active: true
-    excludes: *test
+    active: false
   LateinitUsage:
     active: false
   MissingPackageDeclaration:

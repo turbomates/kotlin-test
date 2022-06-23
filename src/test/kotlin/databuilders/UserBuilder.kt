@@ -18,14 +18,26 @@ import java.util.UUID
 import kotlin.properties.Delegates
 
 object UserMother {
-    fun hasUser() = UserBuilder().apply {
+    fun hasUser(block: UserBuilder.() -> Unit = {}) = UserBuilder().apply {
+        block()
         name = "username"
         rating = 5
         isActive = true
     }
+
+    fun hasDeactivatedUser(block: UserBuilder.() -> Unit = {}) = UserBuilder().apply {
+        block()
+        name = "username"
+        rating = 5
+        isActive = false
+    }
 }
 
-class UserBuilder : Builder<User>, RequestSerializable<UserBuilder>, ResponseSerializable<UserBuilder>, DbAssertive<User> {
+class UserBuilder :
+    Builder<User>,
+    RequestSerializable<UserBuilder, JsonElement>,
+    ResponseSerializable<UserBuilder, JsonElement>,
+    DbAssertive<User> {
     var name by Delegates.notNull<String>()
     var rating by Delegates.notNull<Int>()
     var isActive by Delegates.notNull<Boolean>()

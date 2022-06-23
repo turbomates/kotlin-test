@@ -4,8 +4,11 @@
     <ID>ImplicitUnitReturnType:Response.kt$suspend fun HttpResponse.assertIsOk()</ID>
     <ID>StringLiteralDuplication:Request.kt$"Content-type"</ID>
     <ID>StringLiteralDuplication:Request.kt$"application/json"</ID>
+    <ID>RedundantSuspendModifier:Request.kt$suspend</ID>
+    <ID>StringLiteralDuplication:Request.kt$"Content-type"</ID>
+    <ID>UnusedImports:Request.kt$import io.ktor.client.request.header</ID>
+    <ID>UnusedImports:Request.kt$import io.ktor.client.request.post</ID>
   </ManuallySuppressedIssues>
   <CurrentIssues>
-
   </CurrentIssues>
 </SmellBaseline>

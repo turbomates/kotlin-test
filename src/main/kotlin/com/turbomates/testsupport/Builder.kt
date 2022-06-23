@@ -1,18 +1,17 @@
 package com.turbomates.testsupport
 
-import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.dao.Entity
 
 interface Builder<E> {
     fun build(): E
 }
 
-interface RequestSerializable<B : Builder<*>> {
-    fun toRequest(): JsonElement
+interface RequestSerializable<B : Builder<*>, out T> {
+    fun toRequest(): T
 }
 
-interface ResponseSerializable<B : Builder<*>> {
-    fun toResponse(): JsonElement
+interface ResponseSerializable<B : Builder<*>, out T> {
+    fun toResponse(): T
 }
 
 interface DbAssertive<T : Entity<*>> {

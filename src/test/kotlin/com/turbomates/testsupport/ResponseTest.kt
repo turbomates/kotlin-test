@@ -1,6 +1,15 @@
 package com.turbomates.testsupport
 
 import UserView
+import com.turbomates.testsupport.response.arrayContains
+import com.turbomates.testsupport.response.assert
+import com.turbomates.testsupport.response.assertIsOk
+import com.turbomates.testsupport.response.contains
+import com.turbomates.testsupport.response.containsHeader
+import com.turbomates.testsupport.response.hasCount
+import com.turbomates.testsupport.response.mapTo
+import com.turbomates.testsupport.response.notContains
+import com.turbomates.testsupport.response.toJsonElement
 import databuilders.UserMother
 import integrationTest
 import io.kotest.assertions.throwables.shouldThrow
@@ -17,35 +26,35 @@ class ResponseTest {
     fun `assertIsOk success`() = integrationTest {
         val user = UserMother.hasUser().build()
 
-        handleGet("/api/users/${user.id}") {
+        get("/api/users/${user.id}") {
         }.assertIsOk()
     }
 
     @Test
     fun `assertIsOk success error`() = integrationTest {
         shouldThrow<AssertionError> {
-            handleGet("/api/admins") {
+            get("/api/admins") {
             }.assertIsOk()
         }
     }
 
     @Test
     fun `assert success`() = integrationTest {
-        handleGet("/api/admins") {
+        get("/api/admins") {
         }.assert(HttpStatusCode.NotFound) { }
     }
 
     @Test
     fun `assert error`() = integrationTest {
         shouldThrow<AssertionError> {
-            handleGet("/api/admins") {
+            get("/api/admins") {
             }.assert(HttpStatusCode.Conflict) { }
         }
     }
 
     @Test
     fun `containsHeader success`() = integrationTest {
-        handleGet("/api/admins") {
+        get("/api/admins") {
         }.assert(HttpStatusCode.NotFound) {
             containsHeader(HttpHeaders.ContentLength, 0)
         }
@@ -54,7 +63,7 @@ class ResponseTest {
     @Test
     fun `containsHeader error`() = integrationTest {
         shouldThrow<AssertionError> {
-            handleGet("/api/users") {
+            get("/api/users") {
             }.assert(HttpStatusCode.NotFound) {
                 containsHeader(HttpHeaders.ContentLength, 2)
             }
@@ -63,16 +72,16 @@ class ResponseTest {
 
     @Test
     fun `contains string success`() = integrationTest {
-        val user = UserMother.hasUser().build()
+        val user = UserMother.hasDeactivatedUser().build()
 
-        handleGet("/api/users/${user.id}") {
+        get("/api/users/${user.id}") {
         }.assert { contains(UserView().name) }
     }
 
     @Test
     fun `contains string error`() = integrationTest {
         shouldThrow<AssertionError> {
-            handleGet("/api/users") {
+            get("/api/users") {
             }.assert { contains("404literal") }
         }
     }
@@ -81,28 +90,28 @@ class ResponseTest {
     fun `not contains string success`() = integrationTest {
         val user = UserMother.hasUser().build()
 
-        handleGet("/api/users/${user.id}") {
+        get("/api/users/${user.id}") {
         }.assert { notContains("404literal") }
     }
 
     @Test
     fun `not contains string error`() = integrationTest {
         shouldThrow<AssertionError> {
-            handleGet("/api/users") {
+            get("/api/users") {
             }.assert { notContains(UserView().name) }
         }
     }
 
     @Test
     fun `json array has count success`() = integrationTest {
-        handleGet("/api/users") {
+        get("/api/users") {
         }.assert { toJsonElement<JsonArray>().hasCount(2) }
     }
 
     @Test
     fun `json array has count error`() = integrationTest {
         shouldThrow<AssertionError> {
-            handleGet("/api/users") {
+            get("/api/users") {
             }.assert { toJsonElement<JsonArray>().hasCount(3) }
         }
     }
@@ -111,7 +120,7 @@ class ResponseTest {
     fun `map response`() = integrationTest {
         val user = UserMother.hasUser().build()
 
-        handleGet("/api/users/${user.id}") {
+        get("/api/users/${user.id}") {
         }.assert {
             mapTo<UserView>() shouldBe UserView()
         }
@@ -119,7 +128,7 @@ class ResponseTest {
 
     @Test
     fun `json array contains success`() = integrationTest {
-        handleGet("/api/users") {
+        get("/api/users") {
         }.assert {
             toJsonElement<JsonArray>().arrayContains(
                 json.encodeToJsonElement(UserView())
@@ -130,7 +139,7 @@ class ResponseTest {
     @Test
     fun `json array contains error`() = integrationTest {
         shouldThrow<AssertionError> {
-            handleGet("/api/users") {
+            get("/api/users") {
             }.assert {
                 toJsonElement<JsonArray>().arrayContains(
                     json.encodeToJsonElement(UserView("wrong username"))

@@ -31,6 +31,14 @@ dependencyResolutionManagement {
             library("detekt_formatting", "io.gitlab.arturbosch.detekt", "detekt-formatting").versionRef("detekt")
             plugin("nexus_release", "io.codearte.nexus-staging").versionRef("nexus_staging")
             plugin("kotlin_serialization", "org.jetbrains.kotlin.plugin.serialization").versionRef("kotlin")
+
+            bundle(
+                "exposed",
+                listOf(
+                    "exposed_dao",
+                    "exposed_jdbc"
+                )
+            )
         }
     }
 }

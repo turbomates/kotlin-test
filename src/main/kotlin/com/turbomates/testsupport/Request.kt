@@ -6,22 +6,29 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
 import io.ktor.server.testing.ApplicationTestBuilder
 
-suspend fun ApplicationTestBuilder.handleGet(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
+suspend fun ApplicationTestBuilder.get(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
     client.get(uri) { setup() }
 
-suspend fun ApplicationTestBuilder.handlePost(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
-    client.post(uri) {
-        header("Content-type", "application/json")
+context(ApplicationTestBuilder)
+suspend fun ContentType.post(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
+    val contentType = toString()
+    return client.post(uri) {
+        header("Content-type", contentType)
         setup()
     }
+}
 
-suspend fun ApplicationTestBuilder.handleDelete(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
+suspend fun ApplicationTestBuilder.delete(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
     client.delete(uri) { setup() }
 
-suspend fun ApplicationTestBuilder.handleDeleteWithBody(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
-    client.delete(uri) {
-        header("Content-type", "application/json")
+context(ApplicationTestBuilder)
+suspend fun ContentType.deleteWithBody(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
+    val contentType = toString()
+    return client.delete(uri) {
+        header("Content-type", contentType)
         setup()
     }
+}

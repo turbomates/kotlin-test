@@ -29,8 +29,7 @@ dependencies {
     implementation(deps.kotest.jvm)
     implementation(deps.kotlin.serialization)
     implementation(deps.serialization.json)
-    implementation(deps.exposed.dao)
-    implementation(deps.exposed.jdbc)
+    implementation(deps.bundles.exposed)
     implementation(deps.h2.database)
     detektPlugins(deps.detekt.formatting)
 }
@@ -44,6 +43,7 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "1.8"
         freeCompilerArgs = listOf(
             "-opt-in=kotlin.RequiresOptIn",
+            "-Xcontext-receivers"
         )
     }
 }

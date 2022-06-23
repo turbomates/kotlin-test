@@ -14,9 +14,9 @@ class BuilderTest {
         shouldNotThrow<Throwable> {
             SchemaUtils.create(UserTable)
             val user = testDatabase has (UserMother.hasUser() with { name = "username"; rating = 3 })
-            user.builder.toRequest()
-            user.builder.toResponse()
-            user.builder.seeInDb()
+            user.toRequest()
+            user.toResponse()
+            user.seeInDb()
         }
     }
 }

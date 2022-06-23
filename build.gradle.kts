@@ -27,6 +27,8 @@ dependencies {
     implementation(deps.ktor.server.test.host) { exclude(group = "ch.qos.logback", module = "logback-classic") }
     implementation(deps.kotest)
     implementation(deps.ktor.client.core)
+    implementation(deps.ktor.client.content.negotiation)
+    implementation(deps.ktor.serialization.kotlinx.json)
     implementation(deps.kotest.jvm)
     implementation(deps.kotlin.serialization)
     implementation(deps.serialization.json)

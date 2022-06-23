@@ -1,6 +1,7 @@
 import com.turbomates.testsupport.exposed.Config
 import com.turbomates.testsupport.exposed.rollbackTransaction
 import com.turbomates.testsupport.exposed.testDatabase
+import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.call
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
@@ -31,6 +32,7 @@ fun ApplicationTestBuilder.configureTestApplication(database: Database) {
     // Here you should reuse configuration from main entrypoint
     install(ContentNegotiation) {
         json()
+        json(json, ContentType.Application.Json)
     }
     routing {
         get("/api/users/{id}") {

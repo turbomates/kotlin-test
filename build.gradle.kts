@@ -70,7 +70,7 @@ java {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = "test.support"
+            artifactId = "test-support"
             groupId = "com.turbomates"
             from(components["java"])
             pom {

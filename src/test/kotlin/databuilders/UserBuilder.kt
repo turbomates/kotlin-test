@@ -44,9 +44,8 @@ class UserBuilder :
     lateinit var id: UUID
 
     override fun build(): User {
-        val user = User.create(name, rating)
+        val user = User.create(name, rating).also { id = it.id.value }
         if (!isActive) user.deactivate()
-        id = user.id.value
         return user
     }
 

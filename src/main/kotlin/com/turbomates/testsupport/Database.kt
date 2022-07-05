@@ -22,17 +22,17 @@ infix fun <E, B : Builder<E>> Database.has(builder: B): B =
         builder
     }
 
-internal fun IdTable<*>.assertCount(count: Int, where: SqlExpressionBuilder.() -> Op<Boolean> = { Op.TRUE }) {
+fun IdTable<*>.assertCount(count: Int, where: SqlExpressionBuilder.() -> Op<Boolean> = { Op.TRUE }) {
     val countInDatabase = this.select { where() }.map { it[this.id] }.count()
     countInDatabase shouldBe count
 }
 
-internal fun <T> Table.hasValue(value: T, column: Column<T>) {
+fun <T> Table.hasValue(value: T, column: Column<T>) {
     val result = this.selectAll().map { it[column] }
     value shouldBeIn result
 }
 
-internal fun <T> Table.doesNotHaveValue(value: T, column: Column<T>) {
+fun <T> Table.doesNotHaveValue(value: T, column: Column<T>) {
     val result = this.selectAll().map { it[column] }
     value shouldNotBeIn result
 }

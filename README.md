@@ -48,4 +48,4 @@ fun <T> rollbackTransaction(db: Database = testDatabase, statement: Transaction.
     return transaction(db) { val result = statement(); rollback(); result }
 }
 ```
-You can [find](src/test/kotlin/Database.kt) the same usage in the tests of this project
+You can [find](src/test/kotlin/Database.kt) examples in the tests of this project

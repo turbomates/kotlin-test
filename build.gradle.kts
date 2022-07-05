@@ -25,15 +25,15 @@ dependencies {
     testImplementation(deps.serialization.json)
     testImplementation(deps.ktor.server.test.host) { exclude(group = "ch.qos.logback", module = "logback-classic") }
     implementation(deps.ktor.server.test.host) { exclude(group = "ch.qos.logback", module = "logback-classic") }
-    implementation(deps.kotest)
     implementation(deps.ktor.client.core)
     implementation(deps.ktor.client.content.negotiation)
     implementation(deps.ktor.serialization.kotlinx.json)
-    implementation(deps.kotest.jvm)
     implementation(deps.kotlin.serialization)
     implementation(deps.serialization.json)
     implementation(deps.bundles.exposed)
     implementation(deps.h2.database)
+    api(deps.kotest)
+    api(deps.kotest.jvm)
     detektPlugins(deps.detekt.formatting)
 }
 

@@ -27,10 +27,10 @@ fun HttpResponse.containsHeader(header: String, value: Any) {
     this.headers[header] shouldContain value.toString()
 }
 
-internal suspend fun HttpResponse.contains(value: CharSequence) {
+suspend fun HttpResponse.contains(value: CharSequence) {
     this.bodyAsText() shouldContain value.toString()
 }
 
-internal suspend fun HttpResponse.notContains(value: CharSequence) {
+suspend fun HttpResponse.notContains(value: CharSequence) {
     this.bodyAsText() shouldNotContain value.toString()
 }

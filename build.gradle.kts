@@ -113,12 +113,12 @@ java {
 //     }
 // }
 
-signing {
-    sign(publishing.publications["mavenJava"])
-}
+// signing {
+//     sign(publishing.publications["mavenJava"])
+// }
 
-nexusStaging {
-    serverUrl = "https://s01.oss.sonatype.org/service/local/"
-    username = System.getenv("ORG_GRADLE_PROJECT_SONATYPE_USERNAME") ?: project.properties["ossrhUsername"].toString()
-    password = System.getenv("ORG_GRADLE_PROJECT_SONATYPE_PASSWORD") ?: project.properties["ossrhPassword"].toString()
-}
+// nexusStaging {
+//     serverUrl = "https://s01.oss.sonatype.org/service/local/"
+//     username = System.getenv("ORG_GRADLE_PROJECT_SONATYPE_USERNAME") ?: project.properties["ossrhUsername"].toString()
+//     password = System.getenv("ORG_GRADLE_PROJECT_SONATYPE_PASSWORD") ?: project.properties["ossrhPassword"].toString()
+// }

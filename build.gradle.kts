@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.github.turbomates"
-version = System.getenv("RELEASE_VERSION") ?: "0.0.1"
+version = "0.1.2"
 
 repositories {
     mavenCentral()
@@ -65,6 +65,14 @@ tasks.named("check").configure {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
 }
 
 // publishing {

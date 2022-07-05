@@ -10,7 +10,7 @@ plugins {
     signing
 }
 
-group = "com.turbomates.test.support"
+group = "com.github.turbomates"
 version = System.getenv("RELEASE_VERSION") ?: "0.0.1"
 
 repositories {

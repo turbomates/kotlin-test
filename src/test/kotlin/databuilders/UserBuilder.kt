@@ -5,7 +5,7 @@ import com.turbomates.testsupport.DbAssertive
 import com.turbomates.testsupport.RequestSerializable
 import com.turbomates.testsupport.ResponseSerializable
 import io.kotest.matchers.collections.shouldNotBeEmpty
-import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.jetbrains.exposed.dao.UUIDEntity
@@ -32,11 +32,10 @@ object UserMother {
         isActive = false
     }
 }
-
 class UserBuilder :
     Builder<User>(),
-    RequestSerializable<UserBuilder, JsonElement>,
-    ResponseSerializable<UserBuilder, JsonElement>,
+    RequestSerializable<JsonObject>,
+    ResponseSerializable<JsonObject>,
     DbAssertive<User> {
     var name by Delegates.notNull<String>()
     var rating by Delegates.notNull<Int>()
@@ -49,7 +48,7 @@ class UserBuilder :
         return user
     }
 
-    override fun toRequest(): JsonElement {
+    override fun toRequest(): JsonObject {
         return buildJsonObject {
             put("name", name)
             put("rating", rating)
@@ -57,7 +56,7 @@ class UserBuilder :
         }
     }
 
-    override fun toResponse(): JsonElement {
+    override fun toResponse(): JsonObject {
         return buildJsonObject {
             put("name", name)
             put("rating", rating)

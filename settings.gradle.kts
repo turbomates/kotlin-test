@@ -5,14 +5,14 @@ enableFeaturePreview("VERSION_CATALOGS")
 dependencyResolutionManagement {
     versionCatalogs {
         create("deps") {
-            version("ktor", "2.0.2")
-            version("detekt", "1.21.0-RC1")
-            version("kotlin", "1.6.20")
+            version("ktor", "2.0.3")
+            version("detekt", "1.21.0-RC2")
+            version("kotlin", "1.7.0")
             version("kotlin_serialization_json", "1.3.1")
             version("nexus_staging", "0.30.0")
-            version("exposed", "0.38.2")
-            version("h2database", "2.1.214")
-            version("kotest", "5.2.3")
+            version("exposed", "0.36.2")
+            version("h2database", "1.4.200")
+            version("kotest", "5.3.2")
             version("mockk", "1.12.4")
 
             library("ktor_client_core", "io.ktor", "ktor-client-core").versionRef("ktor")

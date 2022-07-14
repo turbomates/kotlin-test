@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test
 class ResponseTest {
     @Test
     fun `assertIsOk success`() = integrationTest {
-        val user = UserMother.hasUser().build()
+        val user = UserMother.one().build()
 
         get("/api/users/${user.id}") {
         }.assertIsOk()
@@ -72,7 +72,7 @@ class ResponseTest {
 
     @Test
     fun `contains string success`() = integrationTest {
-        val user = UserMother.hasDeactivatedUser().build()
+        val user = UserMother.deactivatedUser().build()
 
         get("/api/users/${user.id}") {
         }.assert { contains(UserView().name) }
@@ -88,7 +88,7 @@ class ResponseTest {
 
     @Test
     fun `not contains string success`() = integrationTest {
-        val user = UserMother.hasUser().build()
+        val user = UserMother.one().build()
 
         get("/api/users/${user.id}") {
         }.assert { notContains("404literal") }
@@ -118,7 +118,7 @@ class ResponseTest {
 
     @Test
     fun `map response`() = integrationTest {
-        val user = UserMother.hasUser().build()
+        val user = UserMother.one().build()
 
         get("/api/users/${user.id}") {
         }.assert {

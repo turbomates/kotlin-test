@@ -54,7 +54,7 @@ fun ApplicationTestBuilder.configureTestApplication(database: Database) {
 data class UserView(val name: String = "username", val rating: Int = 5, val isActive: Boolean = true)
 
 private fun initDatabaseConfig() {
-    Config.databaseUrl = "jdbc:h2:mem:test"
+    Config.databaseUrl = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false"
     Config.driver = "jdbc:h2:mem:test"
     Config.user = "jdbc:h2:mem:test"
     Config.password = "jdbc:h2:mem:test"

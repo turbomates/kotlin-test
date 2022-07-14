@@ -26,24 +26,3 @@ body:
         A description of the issue, e.g. "It would be great if..."
     validations:
       required: true
-
-  - type: input
-    id: kotlin-sdk-version
-    attributes:
-      label: LSports Kotlin SDK version used
-    validations:
-      required: true
-
-  - type: input
-    id: platform-used
-    attributes:
-      label: Platform
-    validations:
-      required: true
-
-  - type: input
-    id: operating-system
-    attributes:
-      label: Operating System and version
-    validations:
-      required: true

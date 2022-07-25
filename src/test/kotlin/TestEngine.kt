@@ -8,7 +8,9 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
+import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.Serializable
@@ -42,6 +44,12 @@ fun ApplicationTestBuilder.configureTestApplication(database: Database) {
             call.respond(listOf(UserView(), UserView("username2", 4)))
         }
         post("/api/users") {
+            call.respond("ok")
+        }
+        patch("/api/users/{id}") {
+            call.respond("ok")
+        }
+        put("/api/users/{id}") {
             call.respond("ok")
         }
         delete("/api/users") {

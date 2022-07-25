@@ -10,6 +10,8 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.client.request.post as clientPost
+import io.ktor.client.request.patch as clientPatch
+import io.ktor.client.request.put as clientPut
 
 suspend fun ApplicationTestBuilder.get(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
     client.get(uri) { setup() }
@@ -18,6 +20,22 @@ context(ApplicationTestBuilder)
 suspend fun (HttpRequestBuilder.() -> Unit).post(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
     return client().clientPost(uri) {
         this@post.invoke(this)
+        setup()
+    }
+}
+
+context(ApplicationTestBuilder)
+suspend fun (HttpRequestBuilder.() -> Unit).patch(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
+    return client().clientPatch(uri) {
+        this@patch.invoke(this)
+        setup()
+    }
+}
+
+context(ApplicationTestBuilder)
+suspend fun (HttpRequestBuilder.() -> Unit).put(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
+    return client().clientPut(uri) {
+        this@put.invoke(this)
         setup()
     }
 }

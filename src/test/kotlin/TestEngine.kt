@@ -8,7 +8,9 @@ import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
+import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.Serializable
@@ -44,6 +46,12 @@ fun ApplicationTestBuilder.configureTestApplication(database: Database) {
         post("/api/users") {
             call.respond("ok")
         }
+        patch("/api/users/{id}") {
+            call.respond("ok")
+        }
+        put("/api/users/{id}") {
+            call.respond("ok")
+        }
         delete("/api/users") {
             call.respond("ok")
         }
@@ -54,7 +62,7 @@ fun ApplicationTestBuilder.configureTestApplication(database: Database) {
 data class UserView(val name: String = "username", val rating: Int = 5, val isActive: Boolean = true)
 
 private fun initDatabaseConfig() {
-    Config.databaseUrl = "jdbc:h2:mem:test"
+    Config.databaseUrl = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false"
     Config.driver = "jdbc:h2:mem:test"
     Config.user = "jdbc:h2:mem:test"
     Config.password = "jdbc:h2:mem:test"

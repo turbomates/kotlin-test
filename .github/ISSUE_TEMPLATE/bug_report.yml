@@ -6,7 +6,7 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Describe the bug
+      label: Description of the bug
       description: A clear and concise description of what the bug is.
     validations:
       required: true
@@ -18,7 +18,7 @@ body:
       description: |
         Tell us what should happen.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: current
@@ -28,7 +28,7 @@ body:
         Tell us what happens instead of the expected behavior.
         Include full errors, uncaught exceptions, stack traces, and relevant logs.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: reproduction
@@ -39,25 +39,4 @@ body:
         For more complex issues provide a repo with the smallest sample that reproduces the bug.
         Avoid including business logic or unrelated code, it makes diagnosis more difficult.
     validations:
-      required: true
-
-  - type: input
-    id: kotlin-sdk-version
-    attributes:
-      label: LSports Kotlin SDK version used
-    validations:
-      required: true
-
-  - type: input
-    id: platform-used
-    attributes:
-      label: Platform
-    validations:
-      required: true
-
-  - type: input
-    id: operating-system
-    attributes:
-      label: Operating System and version
-    validations:
-      required: true
+      required: false

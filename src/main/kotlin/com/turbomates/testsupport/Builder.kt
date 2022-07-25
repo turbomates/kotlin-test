@@ -8,11 +8,16 @@ abstract class Builder<E : Any> {
     abstract fun build(): E
 }
 
-interface RequestSerializable<B : Builder<*>, out T> {
+interface Fixture<B : Builder<*>> {
+    fun load(block: B.() -> Unit): B
+    fun rollback()
+}
+
+interface RequestSerializable<out T> {
     fun toRequest(): T
 }
 
-interface ResponseSerializable<B : Builder<*>, out T> {
+interface ResponseSerializable<out T> {
     fun toResponse(): T
 }
 

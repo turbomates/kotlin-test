@@ -1,20 +1,17 @@
 package com.turbomates.testsupport
 
-import com.turbomates.testsupport.exposed.testDatabase
-import databuilders.UserMother
+import databuilders.UserFixture
 import databuilders.UserTable
 import integrationTest
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.junit.jupiter.api.Test
 
 class DatabaseTest {
     @Test
     fun `test database extensions`() = integrationTest {
-        shouldNotThrow<Throwable> {
-            SchemaUtils.create(UserTable)
-            val user = testDatabase has UserMother.hasUser()
+        shouldNotThrow<AssertionError> {
+            val user = UserFixture.load { }
             UserTable.assertCount(1)
             UserTable.assertCount(1) { UserTable.name eq user.name }
             UserTable.assertCount(0) { UserTable.name eq "wrong name" }
@@ -26,8 +23,7 @@ class DatabaseTest {
     @Test
     fun `test hasValue throws assertion error`() = integrationTest {
         shouldThrow<AssertionError> {
-            SchemaUtils.create(UserTable)
-            testDatabase has UserMother.hasUser()
+            UserFixture.load { }
             UserTable.hasValue("wrong name", UserTable.name)
         }
     }
@@ -35,8 +31,7 @@ class DatabaseTest {
     @Test
     fun `test doesNotHaveValue throws assertion error`() = integrationTest {
         shouldThrow<AssertionError> {
-            SchemaUtils.create(UserTable)
-            val user = testDatabase has UserMother.hasUser()
+            val user = UserFixture.load { }
             UserTable.doesNotHaveValue(user.name, UserTable.name)
         }
     }
@@ -44,8 +39,7 @@ class DatabaseTest {
     @Test
     fun `test assertCount throws assertion error`() = integrationTest {
         shouldThrow<AssertionError> {
-            SchemaUtils.create(UserTable)
-            testDatabase has UserMother.hasUser()
+            UserFixture.load { }
             UserTable.assertCount(0)
         }
     }

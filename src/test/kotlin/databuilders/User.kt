@@ -2,30 +2,35 @@ package databuilders
 
 import com.turbomates.testsupport.Builder
 import com.turbomates.testsupport.DbAssertive
+import com.turbomates.testsupport.Fixture
 import com.turbomates.testsupport.RequestSerializable
 import com.turbomates.testsupport.ResponseSerializable
+import com.turbomates.testsupport.exposed.testDatabase
 import io.kotest.matchers.collections.shouldNotBeEmpty
-import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.UUID
 import kotlin.properties.Delegates
 
 object UserMother {
-    fun hasUser(block: UserBuilder.() -> Unit = {}) = UserBuilder().apply {
+    fun one(block: UserBuilder.() -> Unit = {}) = UserBuilder().apply {
         block()
         name = "username"
         rating = 5
         isActive = true
     }
 
-    fun hasDeactivatedUser(block: UserBuilder.() -> Unit = {}) = UserBuilder().apply {
+    fun deactivatedUser(block: UserBuilder.() -> Unit = {}) = UserBuilder().apply {
         block()
         name = "username"
         rating = 5
@@ -35,8 +40,8 @@ object UserMother {
 
 class UserBuilder :
     Builder<User>(),
-    RequestSerializable<UserBuilder, JsonElement>,
-    ResponseSerializable<UserBuilder, JsonElement>,
+    RequestSerializable<JsonObject>,
+    ResponseSerializable<JsonObject>,
     DbAssertive<User> {
     var name by Delegates.notNull<String>()
     var rating by Delegates.notNull<Int>()
@@ -49,7 +54,7 @@ class UserBuilder :
         return user
     }
 
-    override fun toRequest(): JsonElement {
+    override fun toRequest(): JsonObject {
         return buildJsonObject {
             put("name", name)
             put("rating", rating)
@@ -57,7 +62,7 @@ class UserBuilder :
         }
     }
 
-    override fun toResponse(): JsonElement {
+    override fun toResponse(): JsonObject {
         return buildJsonObject {
             put("name", name)
             put("rating", rating)
@@ -98,4 +103,19 @@ object UserTable : UUIDTable("users") {
     val name = text("name")
     val rating = integer("rating")
     val isActive = bool("active").default(true)
+}
+
+object UserFixture : Fixture<UserBuilder> {
+    override fun load(block: UserBuilder.() -> Unit) = transaction(testDatabase) {
+        SchemaUtils.create(UserTable)
+        val builder = UserMother.one(block)
+        builder.build()
+        builder
+    }
+
+    override fun rollback() {
+        transaction(testDatabase) {
+            UserTable.deleteAll()
+        }
+    }
 }

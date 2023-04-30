@@ -11,6 +11,7 @@ import com.turbomates.testsupport.response.mapTo
 import com.turbomates.testsupport.response.notContains
 import com.turbomates.testsupport.response.toJsonElement
 import databuilders.UserMother
+import databuilders.UserTable
 import integrationTest
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -19,11 +20,14 @@ import io.ktor.http.HttpStatusCode
 import json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.encodeToJsonElement
+import org.jetbrains.exposed.sql.SchemaUtils
 import org.junit.jupiter.api.Test
+
 
 class ResponseTest {
     @Test
     fun `assertIsOk success`() = integrationTest {
+        SchemaUtils.create(UserTable)
         val user = UserMother.one().build()
 
         get("/api/users/${user.id}") {
@@ -72,6 +76,7 @@ class ResponseTest {
 
     @Test
     fun `contains string success`() = integrationTest {
+        SchemaUtils.create(UserTable)
         val user = UserMother.deactivatedUser().build()
 
         get("/api/users/${user.id}") {
@@ -88,6 +93,7 @@ class ResponseTest {
 
     @Test
     fun `not contains string success`() = integrationTest {
+        SchemaUtils.create(UserTable)
         val user = UserMother.one().build()
 
         get("/api/users/${user.id}") {
@@ -118,6 +124,7 @@ class ResponseTest {
 
     @Test
     fun `map response`() = integrationTest {
+        SchemaUtils.create(UserTable)
         val user = UserMother.one().build()
 
         get("/api/users/${user.id}") {

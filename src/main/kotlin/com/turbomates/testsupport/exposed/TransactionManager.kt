@@ -1,15 +1,18 @@
 package com.turbomates.testsupport.exposed
 
+import io.kotest.assertions.errorCollectorContextElement
+import java.sql.Connection
+import java.util.UUID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.DatabaseConfig
 import org.jetbrains.exposed.sql.Transaction
+import org.jetbrains.exposed.sql.exposedLogger
 import org.jetbrains.exposed.sql.statements.api.ExposedSavepoint
 import org.jetbrains.exposed.sql.transactions.TransactionInterface
 import org.jetbrains.exposed.sql.transactions.TransactionManager
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.sql.Connection
-import java.util.UUID
-import org.jetbrains.exposed.sql.exposedLogger
+import org.jetbrains.exposed.sql.transactions.transactionManager
 
 class TransactionManager(
     private val db: Database,
@@ -206,6 +209,14 @@ val testDatabase by lazy {
     )
 }
 
-fun <T> rollbackTransaction(db: Database = testDatabase, statement: Transaction.() -> T): T {
-    return transaction(db) { val result = statement(); rollback(); result }
+fun rollbackTransaction(statement: suspend TestTransaction.() -> Unit) = runTest {
+    val manager = (testDatabase.transactionManager as com.turbomates.testsupport.exposed.TransactionManager)
+    val testTransaction = manager.prepareWrapperTransaction()
+    try {
+        testTransaction.statement()
+    } finally {
+        manager.rollback()
+    }
 }
+
+fun runTest(test: suspend CoroutineScope.() -> Unit) = runBlocking(errorCollectorContextElement, test)

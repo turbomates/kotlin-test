@@ -13,6 +13,7 @@ import org.jetbrains.exposed.sql.statements.api.ExposedSavepoint
 import org.jetbrains.exposed.sql.transactions.TransactionInterface
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transactionManager
+import org.slf4j.LoggerFactory
 
 class TransactionManager(
     private val db: Database,
@@ -23,13 +24,13 @@ class TransactionManager(
     private var wrapperTransaction: Transaction? = null
     private var inClosingState: Boolean = false
     override var defaultReadOnly = db.config.defaultReadOnly
-
     override fun bindTransactionToThread(transaction: Transaction?) {
 
         if (!inClosingState) {
             if (transaction !is TestTransaction && transaction != null) {
                 this.threadTransactions[Thread.currentThread()] = transaction
             } else {
+                exposedLogger.debug("remove unexpected transaction")
                 this.threadTransactions.remove(Thread.currentThread())
             }
         }
@@ -49,6 +50,7 @@ class TransactionManager(
             "You are trying to create new transaction outside of rollbackTransaction"
         }
 
+        exposedLogger.debug("open new transaction in rollback statement")
         val parent: Transaction = outerTransaction ?: currentOrNull() ?: wrapperTransaction!!
         val newTransaction = Transaction(
             TestTransactionImpl(
@@ -68,6 +70,7 @@ class TransactionManager(
         check(wrapperTransaction == null) {
             "trying to open new wrapper transaction while old is not closed yet"
         }
+        exposedLogger.debug("open wrapper transaction")
         inClosingState = false
         threadTransactions.clear()
         wrapperTransaction = object : TestTransaction, Transaction(
@@ -83,6 +86,7 @@ class TransactionManager(
     }
 
     fun rollback() = synchronized(this) {
+        exposedLogger.debug("rollback all transactions")
         inClosingState = true
         threadTransactions.forEach { it.value.rollbackSafely() }
         wrapperTransaction?.rollbackSafely()

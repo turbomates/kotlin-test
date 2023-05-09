@@ -17,7 +17,6 @@ import io.ktor.server.testing.testApplication
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun integrationTest(test: suspend ApplicationTestBuilder.() -> Unit): Unit = rollbackTransaction {

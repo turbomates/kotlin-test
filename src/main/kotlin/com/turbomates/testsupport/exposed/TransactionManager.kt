@@ -13,7 +13,6 @@ import org.jetbrains.exposed.sql.statements.api.ExposedSavepoint
 import org.jetbrains.exposed.sql.transactions.TransactionInterface
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transactionManager
-import org.slf4j.LoggerFactory
 
 class TransactionManager(
     private val db: Database,

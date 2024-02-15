@@ -1,3 +1,8 @@
+pluginManagement {
+    plugins {
+        kotlin("jvm") version "1.9.22"
+    }
+}
 rootProject.name = "test-support"
 include("src")
 
@@ -7,12 +12,11 @@ dependencyResolutionManagement {
         create("deps") {
             version("ktor", "2.0.3")
             version("detekt", "1.21.0-RC2")
-            version("kotlin", "1.7.0")
+            version("kotlin", "1.9.0")
             version("kotlin_serialization_json", "1.3.1")
-            version("nexus_staging", "0.30.0")
             version("exposed", "0.41.1")
             version("h2database", "2.1.214")
-            version("kotest", "5.2.3")
+            version("kotest", "5.8.0")
             version("mockk", "1.12.4")
 
             library("ktor_client_core", "io.ktor", "ktor-client-core").versionRef("ktor")
@@ -31,7 +35,6 @@ dependencyResolutionManagement {
             library("mockk", "io.mockk", "mockk").versionRef("mockk")
             plugin("detekt", "io.gitlab.arturbosch.detekt").versionRef("detekt")
             library("detekt_formatting", "io.gitlab.arturbosch.detekt", "detekt-formatting").versionRef("detekt")
-            plugin("nexus_release", "io.codearte.nexus-staging").versionRef("nexus_staging")
             plugin("kotlin_serialization", "org.jetbrains.kotlin.plugin.serialization").versionRef("kotlin")
 
             bundle(

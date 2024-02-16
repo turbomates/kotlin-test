@@ -7,8 +7,26 @@
     <ID>RedundantSuspendModifier:Request.kt$suspend</ID>
     <ID>UnusedImports:Request.kt$import io.ktor.client.request.header</ID>
     <ID>UnusedImports:Request.kt$import io.ktor.client.request.post</ID>
-    <ID>RedundantSuspendModifier:Request.kt$suspend</ID>
   </ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>ClassOrdering:TestTransactionManager.kt$TestTransactionManager.TestTransactionImpl$private val savepointName: String get() { var nestedLevel = 0 var currentTransaction = outerTransaction while (currentTransaction != null) { nestedLevel++ currentTransaction = currentTransaction.outerTransaction } return "Exposed_${id}_savepoint_$nestedLevel" }</ID>
+    <ID>NoEmptyFirstLineInMethodBlock:com.turbomates.testsupport.exposed.TestTransactionManager.kt:31</ID>
+    <ID>NullCheckOnMutableProperty:TestTransactionManager.kt$TestTransactionManager.TestTransactionImpl$if (shouldUseSavePoints &amp;&amp; savepoint != null) { connection.rollback(savepoint!!) savepoint = connection.setSavepoint(savepointName) } else { connection.rollback() }</ID>
+    <ID>RedundantSuspendModifier:Request.kt$suspend</ID>
+    <ID>UnnecessaryLet:TestTransactionManager.kt$let { it.closeIfPossible() transaction.currentStatement = null }</ID>
+    <ID>UnnecessaryParentheses:TestTransactionManager.kt$(testDatabase.transactionManager as TestTransactionManager)</ID>
+    <ID>UnusedImports:Common.kt$import io.kotest.assertions.assertSoftly</ID>
+    <ID>UnusedImports:Common.kt$import io.kotest.assertions.withClue</ID>
+    <ID>UnusedImports:Common.kt$import io.kotest.matchers.shouldBe</ID>
+    <ID>UnusedImports:Common.kt$import io.kotest.matchers.string.shouldContain</ID>
+    <ID>UnusedImports:Common.kt$import io.kotest.matchers.string.shouldNotContain</ID>
+    <ID>UnusedImports:Database.kt$import io.kotest.matchers.collections.shouldBeIn</ID>
+    <ID>UnusedImports:Database.kt$import io.kotest.matchers.collections.shouldNotBeIn</ID>
+    <ID>UnusedImports:Database.kt$import io.kotest.matchers.shouldBe</ID>
+    <ID>UnusedImports:Kotlinx.kt$import io.kotest.matchers.collections.shouldContain</ID>
+    <ID>UnusedImports:Kotlinx.kt$import io.kotest.matchers.shouldBe</ID>
+    <ID>UnusedImports:TestTransactionManager.kt$import io.kotest.assertions.errorCollectorContextElement</ID>
+    <ID>UnusedImports:TestTransactionManager.kt$import org.jetbrains.exposed.sql.transactions.transactionManager</ID>
+    <ID>UnusedImports:TransactionManager.kt$import kotlin.coroutines.coroutineContext</ID>
   </CurrentIssues>
 </SmellBaseline>

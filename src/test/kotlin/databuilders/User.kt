@@ -106,11 +106,11 @@ object UserTable : UUIDTable("users") {
 }
 
 object UserFixture : Fixture<UserBuilder> {
-    override fun load(block: UserBuilder.() -> Unit) = transaction(testDatabase) {
+    override fun load(block: UserBuilder.() -> Unit): UserBuilder {
         SchemaUtils.create(UserTable)
         val builder = UserMother.one(block)
         builder.build()
-        builder
+        return builder
     }
 
     override fun rollback() {

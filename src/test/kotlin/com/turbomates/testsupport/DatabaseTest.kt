@@ -11,36 +11,44 @@ class DatabaseTest {
     @Test
     fun `test database extensions`() = integrationTest {
         shouldNotThrow<AssertionError> {
-            val user = UserFixture.load { }
-            UserTable.assertCount(1)
-            UserTable.assertCount(1) { UserTable.name eq user.name }
-            UserTable.assertCount(0) { UserTable.name eq "wrong name" }
-            UserTable.hasValue(user.name, UserTable.name)
-            UserTable.doesNotHaveValue("wrong name", UserTable.name)
+            transaction {
+                val user = UserFixture.load { }
+                UserTable.assertCount(1)
+                UserTable.assertCount(1) { UserTable.name eq user.name }
+                UserTable.assertCount(0) { UserTable.name eq "wrong name" }
+                UserTable.hasValue(user.name, UserTable.name)
+                UserTable.doesNotHaveValue("wrong name", UserTable.name)
+            }
         }
     }
 
     @Test
     fun `test hasValue throws assertion error`() = integrationTest {
         shouldThrow<AssertionError> {
-            UserFixture.load { }
-            UserTable.hasValue("wrong name", UserTable.name)
+            transaction {
+                UserFixture.load { }
+                UserTable.hasValue("wrong name", UserTable.name)
+            }
         }
     }
 
     @Test
     fun `test doesNotHaveValue throws assertion error`() = integrationTest {
         shouldThrow<AssertionError> {
-            val user = UserFixture.load { }
-            UserTable.doesNotHaveValue(user.name, UserTable.name)
+            transaction {
+                val user = UserFixture.load { }
+                UserTable.doesNotHaveValue(user.name, UserTable.name)
+            }
         }
     }
 
     @Test
     fun `test assertCount throws assertion error`() = integrationTest {
         shouldThrow<AssertionError> {
-            UserFixture.load { }
-            UserTable.assertCount(0)
+            transaction {
+                UserFixture.load { }
+                UserTable.assertCount(0)
+            }
         }
     }
 }

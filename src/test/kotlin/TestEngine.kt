@@ -1,7 +1,6 @@
 import com.turbomates.testsupport.exposed.Config
 import com.turbomates.testsupport.exposed.TestTransaction
 import com.turbomates.testsupport.exposed.rollbackTransaction
-import com.turbomates.testsupport.exposed.testDatabase
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.call
@@ -16,24 +15,20 @@ import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.transactions.transaction
 
-fun integrationTest(test: suspend ApplicationTestBuilder.() -> Unit): Unit = rollbackTransaction {
-    transaction {
-        applicationTest(test)
-    }
+fun integrationTest(test: suspend context(TestTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) = rollbackTransaction {
+    this.applicationTest(test)
 }
 
 @Suppress("unused")
-fun TestTransaction.applicationTest(test: suspend ApplicationTestBuilder.() -> Unit) = testApplication {
+fun TestTransaction.applicationTest(test: suspend context(TestTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) = testApplication {
     initDatabaseConfig()
-    configureTestApplication(testDatabase)
-    test()
+    configureTestApplication()
+    test(this@TestTransaction, this, this)
 }
 
 @Suppress("LongMethod", "UnnecessaryOptInAnnotation", "ComplexMethod")
-fun ApplicationTestBuilder.configureTestApplication(database: Database) {
+fun ApplicationTestBuilder.configureTestApplication() {
     // Here you should reuse configuration from main entrypoint
     install(ContentNegotiation) {
         json()

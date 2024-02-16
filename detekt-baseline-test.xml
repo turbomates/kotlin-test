@@ -4,5 +4,25 @@
     <ID>MissingPackageDeclaration:TestEngine.kt$.TestEngine.kt</ID>
   </ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>MissingPackageDeclaration:TestEngine.kt$.TestEngine.kt</ID>
+    <ID>UnusedImports:BuilderTest.kt$import com.turbomates.testsupport.exposed.testDatabase</ID>
+    <ID>UnusedImports:BuilderTest.kt$import io.kotest.assertions.throwables.shouldNotThrow</ID>
+    <ID>UnusedImports:DatabaseTest.kt$import io.kotest.assertions.throwables.shouldNotThrow</ID>
+    <ID>UnusedImports:DatabaseTest.kt$import io.kotest.assertions.throwables.shouldThrow</ID>
+    <ID>UnusedImports:RequestTest.kt$import com.turbomates.testsupport.response.assertIsOk</ID>
+    <ID>UnusedImports:ResponseTest.kt$import com.turbomates.testsupport.exposed.testDatabase</ID>
+    <ID>UnusedImports:ResponseTest.kt$import com.turbomates.testsupport.response.arrayContains</ID>
+    <ID>UnusedImports:ResponseTest.kt$import com.turbomates.testsupport.response.assert</ID>
+    <ID>UnusedImports:ResponseTest.kt$import com.turbomates.testsupport.response.assertIsOk</ID>
+    <ID>UnusedImports:ResponseTest.kt$import com.turbomates.testsupport.response.containsHeader</ID>
+    <ID>UnusedImports:ResponseTest.kt$import com.turbomates.testsupport.response.hasCount</ID>
+    <ID>UnusedImports:ResponseTest.kt$import com.turbomates.testsupport.response.mapTo</ID>
+    <ID>UnusedImports:ResponseTest.kt$import com.turbomates.testsupport.response.notContains</ID>
+    <ID>UnusedImports:ResponseTest.kt$import com.turbomates.testsupport.response.toJsonElement</ID>
+    <ID>UnusedImports:ResponseTest.kt$import io.kotest.assertions.throwables.shouldThrow</ID>
+    <ID>UnusedImports:ResponseTest.kt$import io.kotest.matchers.shouldBe</ID>
+    <ID>UnusedImports:TestEngine.kt$import com.turbomates.testsupport.exposed.rollbackTransaction</ID>
+    <ID>UnusedImports:User.kt$import com.turbomates.testsupport.exposed.testDatabase</ID>
+    <ID>UnusedImports:User.kt$import io.kotest.matchers.collections.shouldNotBeEmpty</ID>
   </CurrentIssues>
 </SmellBaseline>

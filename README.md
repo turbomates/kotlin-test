@@ -23,7 +23,7 @@ fun `test`() = integrationTest {
 ```
 
 # Test database usage
-Create testDatabase property with your DBMS credentials
+Either create testDatabase property with your DBMS credentials or just change the [Config](src/main/kotlin/com/turbomates/testsupport/exposed/TestTransactionManager.kt)
 ```kotlin
 internal val testDatabase by lazy {
     Database.connect(

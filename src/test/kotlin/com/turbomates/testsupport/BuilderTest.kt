@@ -12,11 +12,13 @@ class BuilderTest {
     @Test
     fun `test builder`() = integrationTest {
         shouldNotThrow<Throwable> {
-            SchemaUtils.create(UserTable)
-            val user = testDatabase has (UserMother.one() with { name = "username"; rating = 3 })
-            user.toRequest()
-            user.toResponse()
-            user.seeInDb()
+            transaction {
+                SchemaUtils.create(UserTable)
+                val user = testDatabase has (UserMother.one() with { name = "username"; rating = 3 })
+                user.toRequest()
+                user.toResponse()
+                user.seeInDb()
+            }
         }
     }
 }

@@ -29,6 +29,7 @@ dependencyResolutionManagement {
             library("kotlin_serialization", "org.jetbrains.kotlin", "kotlin-serialization").versionRef("kotlin")
             library("exposed_dao", "org.jetbrains.exposed", "exposed-dao").versionRef("exposed")
             library("exposed_jdbc", "org.jetbrains.exposed", "exposed-jdbc").versionRef("exposed")
+            library("exposed_core", "org.jetbrains.exposed", "exposed-core").versionRef("exposed")
             library("h2_database", "com.h2database", "h2").versionRef("h2database")
             library("kotest", "io.kotest", "kotest-assertions-core").versionRef("kotest")
             library("kotest-jvm", "io.kotest", "kotest-assertions-core-jvm").versionRef("kotest")
@@ -41,7 +42,8 @@ dependencyResolutionManagement {
                 "exposed",
                 listOf(
                     "exposed_dao",
-                    "exposed_jdbc"
+                    "exposed_jdbc",
+                    "exposed_core"
                 )
             )
         }

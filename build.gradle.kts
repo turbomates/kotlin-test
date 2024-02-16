@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.github.turbomates"
-version = "0.1.7"
+version = "0.2.0"
 
 repositories {
     mavenCentral()
@@ -45,7 +45,11 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs = listOf(
+            "-opt-in=kotlin.ExperimentalStdlibApi",
             "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlinx.serialization.InternalSerializationApi",
+            "-opt-in=kotlin.contracts.ExperimentalContracts",
+            "-Xskip-prerelease-check",
             "-Xcontext-receivers"
         )
     }

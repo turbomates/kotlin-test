@@ -33,6 +33,7 @@ complexity:
   NestedScopeFunctions:
     active: true
     threshold: 2
+    excludes: *test
   LongMethod:
     active: true
     threshold: 60

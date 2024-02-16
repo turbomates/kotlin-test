@@ -1,6 +1,7 @@
 package com.turbomates.testsupport
 
 import UserView
+import com.turbomates.testsupport.exposed.testDatabase
 import com.turbomates.testsupport.response.arrayContains
 import com.turbomates.testsupport.response.assert
 import com.turbomates.testsupport.response.assertIsOk
@@ -23,12 +24,13 @@ import kotlinx.serialization.json.encodeToJsonElement
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.junit.jupiter.api.Test
 
-
 class ResponseTest {
     @Test
     fun `assertIsOk success`() = integrationTest {
-        SchemaUtils.create(UserTable)
-        val user = UserMother.one().build()
+        transaction {
+            SchemaUtils.create(UserTable)
+        }
+        val user = testDatabase has UserMother.one()
 
         get("/api/users/${user.id}") {
         }.assertIsOk()
@@ -76,8 +78,10 @@ class ResponseTest {
 
     @Test
     fun `contains string success`() = integrationTest {
-        SchemaUtils.create(UserTable)
-        val user = UserMother.deactivatedUser().build()
+        transaction {
+            SchemaUtils.create(UserTable)
+        }
+        val user = testDatabase has UserMother.deactivatedUser()
 
         get("/api/users/${user.id}") {
         }.assert { contains(UserView().name) }
@@ -93,8 +97,10 @@ class ResponseTest {
 
     @Test
     fun `not contains string success`() = integrationTest {
-        SchemaUtils.create(UserTable)
-        val user = UserMother.one().build()
+        transaction {
+            SchemaUtils.create(UserTable)
+        }
+        val user = testDatabase has UserMother.one()
 
         get("/api/users/${user.id}") {
         }.assert { notContains("404literal") }
@@ -124,8 +130,10 @@ class ResponseTest {
 
     @Test
     fun `map response`() = integrationTest {
-        SchemaUtils.create(UserTable)
-        val user = UserMother.one().build()
+        transaction {
+            SchemaUtils.create(UserTable)
+        }
+        val user = testDatabase has UserMother.one()
 
         get("/api/users/${user.id}") {
         }.assert {

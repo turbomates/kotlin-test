@@ -6,7 +6,6 @@ pluginManagement {
 rootProject.name = "test-support"
 include("src")
 
-enableFeaturePreview("VERSION_CATALOGS")
 dependencyResolutionManagement {
     versionCatalogs {
         create("deps") {

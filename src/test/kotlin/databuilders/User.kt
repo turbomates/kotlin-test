@@ -21,6 +21,10 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.UUID
 import kotlin.properties.Delegates
+import org.jetbrains.exposed.sql.Op
+import org.jetbrains.exposed.sql.SqlExpressionBuilder
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.selectAll
 
 object UserMother {
     fun one(block: UserBuilder.() -> Unit = {}) = UserBuilder().apply {
@@ -71,11 +75,14 @@ class UserBuilder :
     }
 
     override fun seeInDb() {
-        UserTable.select {
-            UserTable.name eq name and
-                (UserTable.rating eq rating) and
-                (UserTable.isActive eq isActive)
-        }.shouldNotBeEmpty()
+        UserTable
+            .selectAll()
+            .where {
+                UserTable.name eq name and
+                        (UserTable.rating eq rating) and
+                        (UserTable.isActive eq isActive)
+            }
+            .shouldNotBeEmpty()
     }
 }
 

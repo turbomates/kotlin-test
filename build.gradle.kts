@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.github.turbomates"
-version = "0.2.0"
+version = "0.3.0"
 
 repositories {
     mavenCentral()
@@ -43,7 +43,7 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "21"
         freeCompilerArgs = listOf(
             "-opt-in=kotlin.ExperimentalStdlibApi",
             "-opt-in=kotlin.RequiresOptIn",
@@ -58,7 +58,7 @@ detekt {
     toolVersion = deps.versions.detekt.get()
     autoCorrect = false
     parallel = true
-    config = files("detekt.yml")
+    config.setFrom("detekt.yml")
 }
 tasks.named("check").configure {
     this.setDependsOn(this.dependsOn.filterNot {

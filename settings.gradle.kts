@@ -1,6 +1,6 @@
 pluginManagement {
     plugins {
-        kotlin("jvm") version "1.9.22"
+        kotlin("jvm") version "2.0.0"
     }
 }
 rootProject.name = "test-support"
@@ -10,14 +10,14 @@ enableFeaturePreview("VERSION_CATALOGS")
 dependencyResolutionManagement {
     versionCatalogs {
         create("deps") {
-            version("ktor", "2.0.3")
-            version("detekt", "1.21.0-RC2")
-            version("kotlin", "1.9.0")
-            version("kotlin_serialization_json", "1.3.1")
-            version("exposed", "0.41.1")
+            version("ktor", "2.3.11")
+            version("detekt", "1.23.6")
+            version("kotlin", "2.0.0")
+            version("kotlin_serialization_json", "1.7.0")
+            version("exposed", "0.51.1")
             version("h2database", "2.1.214")
-            version("kotest", "5.8.0")
-            version("mockk", "1.12.4")
+            version("kotest", "5.9.1")
+            version("mockk", "1.13.11")
 
             library("ktor_client_core", "io.ktor", "ktor-client-core").versionRef("ktor")
             library("ktor_server_content_negotiation", "io.ktor", "ktor-server-content-negotiation").versionRef("ktor")

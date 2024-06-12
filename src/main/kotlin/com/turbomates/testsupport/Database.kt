@@ -34,13 +34,13 @@ infix fun <E, B : Builder<E>> Database.has(builder: B): B =
 
 context(Transaction)
 fun IdTable<*>.assertCount(count: Int, where: SqlExpressionBuilder.() -> Op<Boolean> = { Op.TRUE }) {
-    val countInDatabase = this.select { where() }.map { it[this.id] }.count()
+    val countInDatabase = this.selectAll().where { where() }.map { it[this.id] }.count()
     countInDatabase shouldBe count
 }
 
 context(Transaction)
 fun Table.assertCount(count: Long, where: SqlExpressionBuilder.() -> Op<Boolean> = { Op.TRUE }) {
-    val countInDatabase = this.select { where() }.count()
+    val countInDatabase = this.selectAll().where { where() }.count()
     countInDatabase shouldBe count
 }
 

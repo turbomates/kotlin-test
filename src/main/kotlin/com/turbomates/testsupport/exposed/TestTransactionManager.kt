@@ -105,7 +105,7 @@ class TestTransactionManager(
     private fun Transaction.rollbackSafely() {
         try {
             rollback()
-        } catch (transient: Exception) {
+        } catch (_: Exception) {
         }
         closeStatementsAndConnection(this)
     }

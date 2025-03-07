@@ -1,6 +1,6 @@
 pluginManagement {
     plugins {
-        kotlin("jvm") version "2.0.0"
+        kotlin("jvm") version "2.1.10"
     }
 }
 rootProject.name = "test-support"
@@ -9,11 +9,11 @@ include("src")
 dependencyResolutionManagement {
     versionCatalogs {
         create("deps") {
-            version("ktor", "2.3.11")
+            version("ktor", "2.3.13")
             version("detekt", "1.23.6")
-            version("kotlin", "2.0.0")
-            version("kotlin_serialization_json", "1.7.0")
-            version("exposed", "0.51.1")
+            version("kotlin", "2.1.10")
+            version("kotlin_serialization_json", "1.8.0")
+            version("exposed", "0.60.0")
             version("h2database", "2.1.214")
             version("kotest", "5.9.1")
             version("mockk", "1.13.11")

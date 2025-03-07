@@ -20,11 +20,11 @@ import javax.sql.DataSource
 class TestTransactionManager(
     private val db: Database,
     @Volatile override var defaultIsolationLevel: Int = db.config.defaultIsolationLevel,
-    @Volatile override var defaultRepetitionAttempts: Int = db.config.defaultRepetitionAttempts,
+    @Volatile override var defaultRepetitionAttempts: Int = db.config.defaultMaxAttempts,
     override var defaultMaxAttempts: Int = db.config.defaultMaxAttempts,
-    override var defaultMaxRepetitionDelay: Long = db.config.defaultMaxRepetitionDelay,
+    override var defaultMaxRepetitionDelay: Long = db.config.defaultMaxRetryDelay,
     override var defaultMaxRetryDelay: Long = db.config.defaultMaxRetryDelay,
-    override var defaultMinRepetitionDelay: Long = db.config.defaultMinRepetitionDelay,
+    override var defaultMinRepetitionDelay: Long = db.config.defaultMinRetryDelay,
     override var defaultMinRetryDelay: Long = db.config.defaultMinRetryDelay
 ) : TransactionManager {
     private val threadTransactions = mutableMapOf<Thread, Transaction>()

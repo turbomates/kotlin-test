@@ -1,6 +1,5 @@
 import com.turbomates.testsupport.exposed.Config
 import com.turbomates.testsupport.exposed.rollbackTransaction
-import com.turbomates.testsupport.exposed.testTransactionContext
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
@@ -30,11 +29,9 @@ fun JdbcTransaction.applicationTest(test: suspend context(JdbcTransaction, Appli
     testApplication {
         initDatabaseConfig()
         configureTestApplication()
-//        testTransactionContext(this@applicationTest) {
-            withContext(this@applicationTest.asContext()){
-                test(this@applicationTest, this@testApplication, this@testApplication)
-            }
-//        }
+        withContext(this@applicationTest.asContext()) {
+            test(this@applicationTest, this@testApplication, this@testApplication)
+        }
     }
 
 @Suppress("LongMethod", "UnnecessaryOptInAnnotation", "ComplexMethod")

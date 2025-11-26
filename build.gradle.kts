@@ -1,9 +1,12 @@
+import java.time.Duration
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `java-library`
     kotlin("jvm").version(deps.versions.kotlin.asProvider().get())
     alias(deps.plugins.detekt)
+    alias(deps.plugins.nexus.release)
     alias(deps.plugins.kotlin.serialization)
     `maven-publish`
     signing
@@ -42,15 +45,17 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "21"
-        freeCompilerArgs = listOf(
-            "-opt-in=kotlin.ExperimentalStdlibApi",
-            "-opt-in=kotlin.RequiresOptIn",
-            "-opt-in=kotlinx.serialization.InternalSerializationApi",
-            "-opt-in=kotlin.contracts.ExperimentalContracts",
-            "-Xskip-prerelease-check",
-            "-Xcontext-receivers"
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        freeCompilerArgs.set(
+            listOf(
+                "-opt-in=kotlin.ExperimentalStdlibApi",
+                "-opt-in=kotlin.RequiresOptIn",
+                "-opt-in=kotlinx.serialization.InternalSerializationApi",
+                "-opt-in=kotlin.contracts.ExperimentalContracts",
+                "-Xskip-prerelease-check",
+                "-Xcontext-parameters"
+            )
         )
     }
 }
@@ -74,7 +79,67 @@ java {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
+            artifactId = "ktor-audit"
+            groupId = "com.turbomates"
+            version = System.getenv("RELEASE_VERSION") ?: "0.1.0"
             from(components["java"])
+            pom {
+                packaging = "jar"
+                name.set("Ktor Audit extensions")
+                url.set("https://github.com/turbomates/ktor-audit")
+                description.set("Extensions for Hoplite config library")
+
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://github.com/turbomates/ktor-audit/blob/main/LICENSE")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:https://github.com/turbomates/ktor-audit.git")
+                    developerConnection.set("scm:git@github.com:turbomates/ktor-audit.git")
+                    url.set("https://github.com/turbomates/ktor-audit")
+                }
+
+                developers {
+                    developer {
+                        id.set("shustrik")
+                        name.set("Vadim Golodko")
+                        email.set("vadim.golodko@gmail.com")
+                    }
+                }
+            }
         }
     }
+}
+nexusPublishing {
+    repositories {
+        sonatype {
+            // Central Portal OSSRH Staging API URLs
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+
+            username.set(
+                System.getenv("ORG_GRADLE_PROJECT_SONATYPE_USERNAME")
+                    ?: project.findProperty("centralPortalUsername")?.toString()
+            )
+            password.set(
+                System.getenv("ORG_GRADLE_PROJECT_SONATYPE_PASSWORD")
+                    ?: project.findProperty("centralPortalPassword")?.toString()
+            )
+        }
+    }
+
+    // Настройки тайм-аутов (опционально)
+    connectTimeout.set(Duration.ofMinutes(3))
+    clientTimeout.set(Duration.ofMinutes(6))
+
+    transitionCheckOptions {
+        maxRetries.set(80)
+        delayBetween.set(Duration.ofSeconds(10))
+    }
+}
+signing {
+    sign(publishing.publications["mavenJava"])
 }

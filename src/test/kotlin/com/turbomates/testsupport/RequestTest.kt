@@ -7,8 +7,8 @@ import java.util.UUID
 
 class RequestTest {
     @Test
-    fun `get`() = integrationTest {
-        get("/api/users") {}.assertIsOk()
+    fun `get`() = integrationTest { application ->
+        application.get("/api/users") {}.assertIsOk()
     }
 
     @Test
@@ -27,8 +27,8 @@ class RequestTest {
     }
 
     @Test
-    fun `json delete`() = integrationTest {
-        delete("/api/users") {}.assertIsOk()
+    fun `json delete`() = integrationTest { application ->
+        application.delete("/api/users") {}.assertIsOk()
     }
 
     @Test

@@ -16,25 +16,25 @@ import io.ktor.client.request.put as clientPut
 suspend fun ApplicationTestBuilder.get(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
     client.get(uri) { setup() }
 
-context(ApplicationTestBuilder)
+context(builder: ApplicationTestBuilder)
 suspend fun (HttpRequestBuilder.() -> Unit).post(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
-    return client().clientPost(uri) {
+    return builder.client().clientPost(uri) {
         this@post.invoke(this)
         setup()
     }
 }
 
-context(ApplicationTestBuilder)
+context(builder: ApplicationTestBuilder)
 suspend fun (HttpRequestBuilder.() -> Unit).patch(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
-    return client().clientPatch(uri) {
+    return builder.client().clientPatch(uri) {
         this@patch.invoke(this)
         setup()
     }
 }
 
-context(ApplicationTestBuilder)
+context(builder: ApplicationTestBuilder)
 suspend fun (HttpRequestBuilder.() -> Unit).put(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
-    return client().clientPut(uri) {
+    return builder.client().clientPut(uri) {
         this@put.invoke(this)
         setup()
     }
@@ -43,9 +43,9 @@ suspend fun (HttpRequestBuilder.() -> Unit).put(uri: String, setup: HttpRequestB
 suspend fun ApplicationTestBuilder.delete(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse =
     client.delete(uri) { setup() }
 
-context(ApplicationTestBuilder)
+context(builder: ApplicationTestBuilder)
 suspend fun (HttpRequestBuilder.() -> Unit).deleteWithBody(uri: String, setup: HttpRequestBuilder.() -> Unit = {}): HttpResponse {
-    return client().delete(uri) {
+    return builder.client().delete(uri) {
         this@deleteWithBody.invoke(this)
         setup()
     }

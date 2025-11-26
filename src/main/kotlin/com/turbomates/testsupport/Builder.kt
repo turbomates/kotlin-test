@@ -1,7 +1,7 @@
 package com.turbomates.testsupport
 
-import org.jetbrains.exposed.dao.Entity
 import kotlin.properties.Delegates
+import org.jetbrains.exposed.v1.dao.Entity
 
 abstract class Builder<E : Any> {
     var entity by Delegates.notNull<E>()

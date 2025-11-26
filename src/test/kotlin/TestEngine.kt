@@ -1,9 +1,8 @@
 import com.turbomates.testsupport.exposed.Config
-import com.turbomates.testsupport.exposed.TestTransaction
 import com.turbomates.testsupport.exposed.rollbackTransaction
+import com.turbomates.testsupport.exposed.testTransactionContext
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.call
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respond
 import io.ktor.server.routing.delete
@@ -13,19 +12,30 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.v1.core.InternalApi
+import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
+import org.jetbrains.exposed.v1.jdbc.asContext
 
-fun integrationTest(test: suspend context(TestTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) = rollbackTransaction {
-    this.applicationTest(test)
-}
+fun integrationTest(test: suspend context(JdbcTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) =
+    rollbackTransaction {
+        this.applicationTest(test)
+    }
 
+@OptIn(InternalApi::class)
 @Suppress("unused")
-fun TestTransaction.applicationTest(test: suspend context(TestTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) = testApplication {
-    initDatabaseConfig()
-    configureTestApplication()
-    test(this@TestTransaction, this, this)
-}
+fun JdbcTransaction.applicationTest(test: suspend context(JdbcTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) =
+    testApplication {
+        initDatabaseConfig()
+        configureTestApplication()
+//        testTransactionContext(this@applicationTest) {
+            withContext(this@applicationTest.asContext()){
+                test(this@applicationTest, this@testApplication, this@testApplication)
+            }
+//        }
+    }
 
 @Suppress("LongMethod", "UnnecessaryOptInAnnotation", "ComplexMethod")
 fun ApplicationTestBuilder.configureTestApplication() {

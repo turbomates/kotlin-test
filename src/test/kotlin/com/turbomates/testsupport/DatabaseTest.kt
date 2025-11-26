@@ -5,6 +5,7 @@ import databuilders.UserTable
 import integrationTest
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
+import org.jetbrains.exposed.v1.core.eq
 import org.junit.jupiter.api.Test
 
 class DatabaseTest {

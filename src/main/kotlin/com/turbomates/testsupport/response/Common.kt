@@ -1,6 +1,5 @@
 package com.turbomates.testsupport.response
 
-import com.turbomates.testsupport.exposed.TestTransaction
 import com.turbomates.testsupport.transaction
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.withClue
@@ -10,24 +9,24 @@ import io.kotest.matchers.string.shouldNotContain
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
-import org.jetbrains.exposed.sql.Transaction
+import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 
-context(TestTransaction)
+context(transaction: JdbcTransaction)
 suspend fun HttpResponse.assert(
     statusCode: HttpStatusCode = HttpStatusCode.OK,
-    block: suspend context(Transaction, HttpResponse) () -> Unit = {}
+    block: suspend context(JdbcTransaction, HttpResponse) () -> Unit = {}
 ) {
     transaction {
         withClue(bodyAsText()) {
             assertSoftly {
                 status shouldBe statusCode
-                block(this@transaction, this@HttpResponse)
+                block(transaction, contextOf<HttpResponse>())
             }
         }
     }
 }
 
-context(TestTransaction)
+context(transaction: JdbcTransaction)
 suspend fun HttpResponse.assertIsOk() = assert()
 
 fun HttpResponse.containsHeader(header: String, value: Any) {

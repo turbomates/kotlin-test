@@ -16,147 +16,154 @@ import databuilders.UserTable
 import integrationTest
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import json
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.encodeToJsonElement
-import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.v1.core.InternalApi
+import org.jetbrains.exposed.v1.core.transactions.withThreadLocalTransaction
+import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
+import org.jetbrains.exposed.v1.jdbc.SchemaUtils
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.Test
 
 class ResponseTest {
+    @OptIn(InternalApi::class)
     @Test
-    fun `assertIsOk success`() = integrationTest {
-        transaction {
+    fun `assertIsOk success`() = integrationTest { application ->
+        transaction(testDatabase) {
             SchemaUtils.create(UserTable)
         }
         val user = testDatabase has UserMother.one()
-
-        get("/api/users/${user.id}") {
+        application.get("/api/users/${user.id}") {
         }.assertIsOk()
     }
 
     @Test
-    fun `assertIsOk success error`() = integrationTest {
+    fun `assertIsOk success error`() = integrationTest { application ->
         shouldThrow<AssertionError> {
-            get("/api/admins") {
+            application.get("/api/admins") {
             }.assertIsOk()
         }
     }
 
     @Test
-    fun `assert success`() = integrationTest {
-        get("/api/admins") {
+    fun `assert success`() = integrationTest { application ->
+        application.get("/api/admins") {
         }.assert(HttpStatusCode.NotFound) { }
     }
 
     @Test
-    fun `assert error`() = integrationTest {
+    fun `assert error`() = integrationTest { application ->
         shouldThrow<AssertionError> {
-            get("/api/admins") {
+            application.get("/api/admins") {
             }.assert(HttpStatusCode.Conflict) { }
         }
     }
 
     @Test
-    fun `containsHeader success`() = integrationTest {
-        get("/api/admins") {
+    fun `containsHeader success`() = integrationTest { application ->
+        application.get("/api/admins") {
         }.assert(HttpStatusCode.NotFound) {
-            containsHeader(HttpHeaders.ContentLength, 0)
+            contextOf<HttpResponse>().containsHeader(HttpHeaders.ContentLength, 0)
         }
     }
 
     @Test
-    fun `containsHeader error`() = integrationTest {
+    fun `containsHeader error`() = integrationTest { application ->
         shouldThrow<AssertionError> {
-            get("/api/users") {
+            application.get("/api/users") {
             }.assert(HttpStatusCode.NotFound) {
-                containsHeader(HttpHeaders.ContentLength, 2)
+                contextOf<HttpResponse>().containsHeader(HttpHeaders.ContentLength, 2)
             }
         }
     }
 
     @Test
-    fun `contains string success`() = integrationTest {
+    fun `contains string success`() = integrationTest { application ->
         transaction {
             SchemaUtils.create(UserTable)
         }
         val user = testDatabase has UserMother.deactivatedUser()
 
-        get("/api/users/${user.id}") {
-        }.assert { contains(UserView().name) }
+        application.get("/api/users/${user.id}") {
+        }.assert { contextOf<HttpResponse>().contains(UserView().name) }
     }
 
     @Test
-    fun `contains string error`() = integrationTest {
+    fun `contains string error`() = integrationTest { application ->
         shouldThrow<AssertionError> {
-            get("/api/users") {
-            }.assert { contains("404literal") }
+            application.get("/api/users") {
+            }.assert { contextOf<HttpResponse>().contains("404literal") }
         }
     }
 
     @Test
-    fun `not contains string success`() = integrationTest {
+    fun `not contains string success`() = integrationTest { application ->
         transaction {
             SchemaUtils.create(UserTable)
         }
         val user = testDatabase has UserMother.one()
 
-        get("/api/users/${user.id}") {
-        }.assert { notContains("404literal") }
+        application.get("/api/users/${user.id}") {
+        }.assert { contextOf<HttpResponse>().notContains("404literal") }
     }
 
     @Test
-    fun `not contains string error`() = integrationTest {
+    fun `not contains string error`() = integrationTest { application ->
         shouldThrow<AssertionError> {
-            get("/api/users") {
-            }.assert { notContains(UserView().name) }
+            application.get("/api/users") {
+            }.assert { contextOf<HttpResponse>().notContains(UserView().name) }
         }
     }
 
     @Test
-    fun `json array has count success`() = integrationTest {
-        get("/api/users") {
-        }.assert { toJsonElement<JsonArray>().hasCount(2) }
+    fun `json array has count success`() = integrationTest { application ->
+        application.get("/api/users") {
+        }.assert { contextOf<HttpResponse>().toJsonElement<JsonArray>().hasCount(2) }
     }
 
     @Test
-    fun `json array has count error`() = integrationTest {
+    fun `json array has count error`() = integrationTest { application ->
         shouldThrow<AssertionError> {
-            get("/api/users") {
-            }.assert { toJsonElement<JsonArray>().hasCount(3) }
+            application.get("/api/users") {
+            }.assert { contextOf<HttpResponse>().toJsonElement<JsonArray>().hasCount(3) }
         }
     }
 
     @Test
-    fun `map response`() = integrationTest {
-        transaction {
+    fun `map response`() = integrationTest { application ->
+        transaction(testDatabase) {
             SchemaUtils.create(UserTable)
         }
         val user = testDatabase has UserMother.one()
 
-        get("/api/users/${user.id}") {
+        application.get("/api/users/${user.id}") {
         }.assert {
-            mapTo<UserView>() shouldBe UserView()
+            contextOf<HttpResponse>().mapTo<UserView>() shouldBe UserView()
         }
     }
 
     @Test
-    fun `json array contains success`() = integrationTest {
-        get("/api/users") {
+    fun `json array contains success`() = integrationTest { application ->
+
+        application.get("/api/users") {
         }.assert {
-            toJsonElement<JsonArray>().arrayContains(
+            contextOf<HttpResponse>().toJsonElement<JsonArray>().arrayContains(
                 json.encodeToJsonElement(UserView())
             )
         }
     }
 
     @Test
-    fun `json array contains error`() = integrationTest {
+    fun `json array contains error`() = integrationTest { application ->
         shouldThrow<AssertionError> {
-            get("/api/users") {
+            application.get("/api/users") {
             }.assert {
-                toJsonElement<JsonArray>().arrayContains(
+                contextOf<HttpResponse>().toJsonElement<JsonArray>().arrayContains(
                     json.encodeToJsonElement(UserView("wrong username"))
                 )
             }

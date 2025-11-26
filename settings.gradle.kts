@@ -9,14 +9,15 @@ include("src")
 dependencyResolutionManagement {
     versionCatalogs {
         create("deps") {
-            version("ktor", "2.3.13")
+            version("ktor", "3.3.0")
             version("detekt", "1.23.6")
-            version("kotlin", "2.1.10")
-            version("kotlin_serialization_json", "1.8.0")
-            version("exposed", "0.60.0")
+            version("kotlin", "2.2.20")
+            version("kotlin_serialization_json", "1.9.0")
+            version("exposed", "1.0.0-rc-3")
             version("h2database", "2.1.214")
-            version("kotest", "5.9.1")
-            version("mockk", "1.13.11")
+            version("kotest", "6.0.0")
+            version("mockk", "1.14.6")
+            version("nexus_staging", "2.0.0")
 
             library("ktor_client_core", "io.ktor", "ktor-client-core").versionRef("ktor")
             library("ktor_server_content_negotiation", "io.ktor", "ktor-server-content-negotiation").versionRef("ktor")
@@ -36,6 +37,7 @@ dependencyResolutionManagement {
             plugin("detekt", "io.gitlab.arturbosch.detekt").versionRef("detekt")
             library("detekt_formatting", "io.gitlab.arturbosch.detekt", "detekt-formatting").versionRef("detekt")
             plugin("kotlin_serialization", "org.jetbrains.kotlin.plugin.serialization").versionRef("kotlin")
+            plugin("nexus.release", "io.github.gradle-nexus.publish-plugin").versionRef("nexus_staging")
 
             bundle(
                 "exposed",

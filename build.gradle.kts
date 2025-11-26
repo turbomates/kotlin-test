@@ -79,27 +79,27 @@ java {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = "ktor-audit"
+            artifactId = "kotlin-test"
             groupId = "com.turbomates"
             version = System.getenv("RELEASE_VERSION") ?: "0.1.0"
             from(components["java"])
             pom {
                 packaging = "jar"
                 name.set("Ktor Audit extensions")
-                url.set("https://github.com/turbomates/ktor-audit")
+                url.set("https://github.com/turbomates/kotlin-test")
                 description.set("Extensions for Hoplite config library")
 
                 licenses {
                     license {
                         name.set("MIT License")
-                        url.set("https://github.com/turbomates/ktor-audit/blob/main/LICENSE")
+                        url.set("https://github.com/turbomates/kotlin-test/blob/main/LICENSE")
                     }
                 }
 
                 scm {
-                    connection.set("scm:https://github.com/turbomates/ktor-audit.git")
-                    developerConnection.set("scm:git@github.com:turbomates/ktor-audit.git")
-                    url.set("https://github.com/turbomates/ktor-audit")
+                    connection.set("scm:https://github.com/turbomates/kotlin-test.git")
+                    developerConnection.set("scm:git@github.com/turbomates/kotlin-test.git")
+                    url.set("https://github.com/turbomates/kotlin-test")
                 }
 
                 developers {

@@ -10,7 +10,6 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.exposed.v1.core.Column
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.Table
-import org.jetbrains.exposed.v1.core.Transaction
 import org.jetbrains.exposed.v1.core.dao.id.IdTable
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
@@ -31,7 +30,6 @@ infix fun <E, B : Builder<E>> Database.has(builder: B): B =
         builder
     }
 
-context(transaction: Transaction)
 fun IdTable<*>.assertCount(count: Int, where: () -> Op<Boolean> = { Op.TRUE }) {
     val countInDatabase = this.selectAll().where { where() }.map { it[this.id] }.count()
     countInDatabase shouldBe count

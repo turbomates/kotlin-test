@@ -1,5 +1,6 @@
 package com.turbomates.testsupport.exposed
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.v1.core.Transaction
@@ -10,18 +11,19 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 class TransactionManager(
     private val primaryDatabase: Database,
-    private val replicaDatabase: List<Database> = emptyList()
+    private val replicaDatabase: List<Database> = emptyList(),
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     constructor(primaryDatabase: Database) : this(primaryDatabase, listOf(primaryDatabase))
 
     suspend operator fun <T> invoke(statement: suspend JdbcTransaction.() -> T): T =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             suspendTransaction(primaryDatabase, statement = statement)
         }
 
 
     suspend fun <T> readOnlyTransaction(statement: suspend JdbcTransaction.() -> T) =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             suspendTransaction(
                 replicaDatabase.random(),
                 statement = statement

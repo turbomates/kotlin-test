@@ -5,7 +5,6 @@ import com.turbomates.testsupport.DbAssertive
 import com.turbomates.testsupport.Fixture
 import com.turbomates.testsupport.RequestSerializable
 import com.turbomates.testsupport.ResponseSerializable
-import com.turbomates.testsupport.exposed.testDatabase
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -22,6 +21,7 @@ import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import testDatabase
 
 object UserMother {
     fun one(block: UserBuilder.() -> Unit = {}) = UserBuilder().apply {

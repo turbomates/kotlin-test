@@ -1,5 +1,3 @@
-import com.turbomates.testsupport.exposed.Config
-import com.turbomates.testsupport.exposed.rollbackTransaction
 import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
@@ -11,17 +9,24 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.v1.core.DatabaseConfig
 import org.jetbrains.exposed.v1.core.InternalApi
+import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
-import org.jetbrains.exposed.v1.jdbc.asContext
+import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
+import org.jetbrains.exposed.v1.jdbc.withTransactionContext
 
-fun integrationTest(test: suspend context(JdbcTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) =
-    rollbackTransaction {
-        this.applicationTest(test)
+suspend fun integrationTest(test: suspend context(JdbcTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) =
+    suspendTransaction(testDatabase) {
+        try {
+            this.applicationTest(test)
+        } finally {
+            rollback()
+        }
     }
+
 
 @OptIn(InternalApi::class)
 @Suppress("unused")
@@ -29,7 +34,7 @@ fun JdbcTransaction.applicationTest(test: suspend context(JdbcTransaction, Appli
     testApplication {
         initDatabaseConfig()
         configureTestApplication()
-        withContext(this@applicationTest.asContext()) {
+        withTransactionContext(this@applicationTest) {
             test(this@applicationTest, this@testApplication, this@testApplication)
         }
     }
@@ -74,3 +79,23 @@ private fun initDatabaseConfig() {
 }
 
 internal val json = Json { encodeDefaults = true }
+
+val testDatabase by lazy {
+    Database.connect(
+        Config.databaseUrl,
+        user = Config.user,
+        password = Config.password,
+        driver = Config.driver,
+        databaseConfig = DatabaseConfig {
+            useNestedTransactions = true
+        }
+    )
+}
+
+object Config {
+    var databaseUrl: String = "jdbc:h2:mem:test"
+    var driver: String = "org.h2.Driver"
+    var user: String = "root"
+    var password: String = ""
+}
+

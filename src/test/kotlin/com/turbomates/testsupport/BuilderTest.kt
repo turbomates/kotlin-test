@@ -1,15 +1,13 @@
 package com.turbomates.testsupport
 
-import com.turbomates.testsupport.exposed.testDatabase
 import databuilders.UserMother
 import databuilders.UserTable
 import integrationTest
 import io.kotest.assertions.throwables.shouldNotThrow
 import org.jetbrains.exposed.v1.core.InternalApi
-import org.jetbrains.exposed.v1.core.transactions.withThreadLocalTransaction
-import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.junit.jupiter.api.Test
+import testDatabase
 
 class BuilderTest {
     @OptIn(InternalApi::class)

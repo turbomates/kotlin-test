@@ -27,6 +27,15 @@ suspend infix fun <E, B : Builder<E>> Database.has(builder: B): B =
         }
     }
 
+@OptIn(InternalApi::class)
+suspend fun JdbcTransaction.transaction(block: suspend JdbcTransaction.() -> Unit) {
+    withTransactionContext(this) {
+        suspendTransaction {
+            block()
+        }
+    }
+}
+
 fun IdTable<*>.assertCount(count: Int, where: () -> Op<Boolean> = { Op.TRUE }) {
     val countInDatabase = this.selectAll().where { where() }.map { it[this.id] }.count()
     countInDatabase shouldBe count

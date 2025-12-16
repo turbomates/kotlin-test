@@ -1,7 +1,6 @@
 package com.turbomates.testsupport
 
 import UserView
-import com.turbomates.testsupport.exposed.testDatabase
 import com.turbomates.testsupport.response.arrayContains
 import com.turbomates.testsupport.response.assert
 import com.turbomates.testsupport.response.assertIsOk
@@ -20,21 +19,20 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import json
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.encodeToJsonElement
 import org.jetbrains.exposed.v1.core.InternalApi
-import org.jetbrains.exposed.v1.core.transactions.withThreadLocalTransaction
 import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.Test
+import testDatabase
 
 class ResponseTest {
     @OptIn(InternalApi::class)
     @Test
     fun `assertIsOk success`() = integrationTest { application ->
-        transaction(testDatabase) {
+        contextOf<JdbcTransaction>().transaction {
             SchemaUtils.create(UserTable)
         }
         val user = testDatabase has UserMother.one()

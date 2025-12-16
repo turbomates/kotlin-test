@@ -6,13 +6,14 @@ import integrationTest
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 import org.junit.jupiter.api.Test
 
 class DatabaseTest {
     @Test
     fun `test database extensions`() = integrationTest {
         shouldNotThrow<AssertionError> {
-            transaction {
+            contextOf<JdbcTransaction>().transaction {
                 val user = UserFixture.load { }
                 UserTable.assertCount(1)
                 UserTable.assertCount(1) { UserTable.name eq user.name }
@@ -26,7 +27,7 @@ class DatabaseTest {
     @Test
     fun `test hasValue throws assertion error`() = integrationTest {
         shouldThrow<AssertionError> {
-            transaction {
+            contextOf<JdbcTransaction>().transaction {
                 UserFixture.load { }
                 UserTable.hasValue("wrong name", UserTable.name)
             }
@@ -36,7 +37,7 @@ class DatabaseTest {
     @Test
     fun `test doesNotHaveValue throws assertion error`() = integrationTest {
         shouldThrow<AssertionError> {
-            transaction {
+            contextOf<JdbcTransaction>().transaction {
                 val user = UserFixture.load { }
                 UserTable.doesNotHaveValue(user.name, UserTable.name)
             }
@@ -46,7 +47,7 @@ class DatabaseTest {
     @Test
     fun `test assertCount throws assertion error`() = integrationTest {
         shouldThrow<AssertionError> {
-            transaction {
+            contextOf<JdbcTransaction>().transaction {
                 UserFixture.load { }
                 UserTable.assertCount(0)
             }

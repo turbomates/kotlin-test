@@ -15,17 +15,18 @@ import org.jetbrains.exposed.v1.core.DatabaseConfig
 import org.jetbrains.exposed.v1.core.InternalApi
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
-import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.withTransactionContext
 
-suspend fun integrationTest(test: suspend context(JdbcTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) =
-    suspendTransaction(testDatabase) {
+fun integrationTest(test: suspend context(JdbcTransaction, ApplicationTestBuilder) (ApplicationTestBuilder) -> Unit) {
+    transaction(testDatabase) {
         try {
             this.applicationTest(test)
         } finally {
             rollback()
         }
     }
+}
 
 
 @OptIn(InternalApi::class)

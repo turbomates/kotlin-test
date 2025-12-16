@@ -17,14 +17,14 @@ import org.jetbrains.exposed.v1.jdbc.withTransactionContext
 context(transaction: JdbcTransaction)
 suspend fun HttpResponse.assert(
     statusCode: HttpStatusCode = HttpStatusCode.OK,
-    block: suspend context(JdbcTransaction, HttpResponse) () -> Unit = {}
+    block: suspend context(JdbcTransaction) HttpResponse.() -> Unit = {}
 ) {
     withTransactionContext(transaction) {
         suspendTransaction {
             withClue(bodyAsText()) {
                 assertSoftly {
                     status shouldBe statusCode
-                    block(transaction, contextOf<HttpResponse>())
+                    this@assert.block()
                 }
             }
         }

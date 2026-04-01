@@ -4,7 +4,6 @@ pluginManagement {
     }
 }
 rootProject.name = "test-support"
-include("src")
 
 dependencyResolutionManagement {
     versionCatalogs {
@@ -13,7 +12,7 @@ dependencyResolutionManagement {
             version("detekt", "1.23.6")
             version("kotlin", "2.2.20")
             version("kotlin_serialization_json", "1.9.0")
-            version("exposed", "1.0.0-rc-4")
+            version("exposed", "1.1.1")
             version("h2database", "2.1.214")
             version("kotest", "6.0.0")
             version("mockk", "1.14.6")
@@ -50,4 +49,3 @@ dependencyResolutionManagement {
         }
     }
 }
-include("main")

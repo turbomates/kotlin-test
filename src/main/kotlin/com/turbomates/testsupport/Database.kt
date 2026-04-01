@@ -13,26 +13,21 @@ import org.jetbrains.exposed.v1.core.dao.id.IdTable
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 import org.jetbrains.exposed.v1.jdbc.selectAll
-import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
-import org.jetbrains.exposed.v1.jdbc.withTransactionContext
+import org.jetbrains.exposed.v1.jdbc.transactions.inTopLevelSuspendTransaction
 
 @OptIn(InternalApi::class)
 context(transaction: JdbcTransaction)
 suspend infix fun <E, B : Builder<E>> Database.has(builder: B): B =
-    withTransactionContext(transaction) {
-        suspendTransaction {
-            val entity = builder.build()
-            builder.entity = entity
-            builder
-        }
+    inTopLevelSuspendTransaction(outerTransaction = transaction) {
+        val entity = builder.build()
+        builder.entity = entity
+        builder
     }
 
 @OptIn(InternalApi::class)
-suspend fun JdbcTransaction.transaction(block: suspend JdbcTransaction.() -> Unit) {
-    withTransactionContext(this) {
-        suspendTransaction {
-            block()
-        }
+suspend fun <T> JdbcTransaction.transaction(block: suspend JdbcTransaction.() -> T): T {
+    return inTopLevelSuspendTransaction(outerTransaction = this@transaction) {
+        block()
     }
 }
 

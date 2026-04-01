@@ -2,6 +2,7 @@ package com.turbomates.testsupport
 
 import kotlin.properties.Delegates
 import org.jetbrains.exposed.v1.dao.Entity
+import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 
 abstract class Builder<E : Any> {
     var entity by Delegates.notNull<E>()
@@ -9,7 +10,9 @@ abstract class Builder<E : Any> {
 }
 
 interface Fixture<B : Builder<*>> {
-    fun load(block: B.() -> Unit): B
+    context(jdbcTransaction: JdbcTransaction)
+    suspend fun load(block: B.() -> Unit): B
+    context(jdbcTransaction: JdbcTransaction)
     fun rollback()
 }
 

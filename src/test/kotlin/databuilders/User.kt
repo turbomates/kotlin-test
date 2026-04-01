@@ -6,17 +6,18 @@ import com.turbomates.testsupport.Fixture
 import com.turbomates.testsupport.RequestSerializable
 import com.turbomates.testsupport.ResponseSerializable
 import io.kotest.matchers.collections.shouldNotBeEmpty
+import java.util.UUID
+import kotlin.properties.Delegates
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import java.util.UUID
-import kotlin.properties.Delegates
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
-import org.jetbrains.exposed.v1.core.dao.id.UUIDTable
+import org.jetbrains.exposed.v1.core.dao.id.java.UUIDTable
 import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.dao.UUIDEntity
-import org.jetbrains.exposed.v1.dao.UUIDEntityClass
+import org.jetbrains.exposed.v1.dao.java.UUIDEntity
+import org.jetbrains.exposed.v1.dao.java.UUIDEntityClass
+import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.selectAll
@@ -110,13 +111,15 @@ object UserTable : UUIDTable("users") {
 }
 
 object UserFixture : Fixture<UserBuilder> {
-    override fun load(block: UserBuilder.() -> Unit): UserBuilder {
+    context(jdbcTransaction: JdbcTransaction)
+    override suspend fun load(block: UserBuilder.() -> Unit): UserBuilder {
         SchemaUtils.create(UserTable)
         val builder = UserMother.one(block)
         builder.build()
         return builder
     }
 
+    context(jdbcTransaction: JdbcTransaction)
     override fun rollback() {
         transaction(testDatabase) {
             UserTable.deleteAll()
